@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yytxdy.fim.server.mapper.OfflineMessageMapper">
+    <insert id="save">
+        INSERT INTO `t_offline_message` (`receiver_id`, `message_id`) values (#{receiverId}, #{messageId})
+    </insert>
+    <select id="list" resultType="OfflineMessage">
+        select * from t_offline_message where receiver_id = #{userId}
+    </select>
+    <delete id="deleteOfflineMessage">
+        delete from t_offline_message where receiver_id = #{receiverId} and message_id = #{messageId}
+    </delete>
+</mapper>

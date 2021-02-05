@@ -13,6 +13,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,10 @@ public class NettyServer {
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
     @Value("${fim.nettyPort}")
     private Integer nettyPort;
+    @Autowired
+    private HeartbeatHandler heartbeatHandler;
+    @Autowired
+    private ServerHandler serverHandler;
 
     public void run() {
         //boss线程监听端口，worker线程负责数据读写
@@ -50,8 +55,8 @@ public class NettyServer {
                     pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
                     // 添加编码器
                     pipeline.addLast(new ProtobufEncoder());
-                    pipeline.addLast(new ServerHandler());
-                    pipeline.addLast(new HeartbeatHandler());
+                    pipeline.addLast(serverHandler);
+                    pipeline.addLast(heartbeatHandler);
                 }
             });
             //设置TCP参数

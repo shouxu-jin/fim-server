@@ -51,3 +51,5 @@ server:
   port: $[server.port]
 fim:
   nettyPort: $[nettyPort]
+grpc:
+  port: $[grpcPort]
