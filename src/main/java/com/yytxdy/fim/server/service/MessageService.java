@@ -5,7 +5,6 @@ import com.yytxdy.fim.server.entity.Message;
 import com.yytxdy.fim.server.entity.OfflineMessage;
 import com.yytxdy.fim.server.mapper.MessageMapper;
 import com.yytxdy.fim.server.mapper.OfflineMessageMapper;
-import com.yytxdy.fim.server.utils.SequenceGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +26,12 @@ public class MessageService {
 
     @Transactional
     public long save(Fim.SendMessageRequest request) {
-        long messageId = sequenceGenerator.nextId(request.getSenderId(), request.getReceiverId());
+        long messageId = sequenceGenerator.nextId(request.getReceiverId());
         Message message = new Message();
         message.setMessageId(messageId);
         message.setSenderId(request.getSenderId());
         message.setReceiverId(request.getReceiverId());
-        message.setMessageType(request.getMessageType());
+        message.setMessageType(request.getMessageType().getNumber());
         message.setContent(request.getContent());
         OfflineMessage offlineMessage = new OfflineMessage();
         offlineMessage.setMessageId(messageId);

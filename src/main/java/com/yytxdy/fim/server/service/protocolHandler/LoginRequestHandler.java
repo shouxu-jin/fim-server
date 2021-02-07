@@ -5,11 +5,13 @@ import com.yytxdy.fim.server.entity.OfflineMessage;
 import com.yytxdy.fim.server.service.ChannelHolderService;
 import com.yytxdy.fim.server.service.MessageService;
 import com.yytxdy.fim.server.utils.Errors;
+import com.yytxdy.fim.server.utils.ProtocolHelper;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,8 @@ import java.util.stream.Collectors;
 @Service
 public class LoginRequestHandler implements ProtocolHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoginRequestHandler.class);
-
+    @Value("${fim.nettyPort}")
+    private Integer nettyPort;
     @Autowired
     private RedisTemplate<String, Serializable> redisTemplate;
     @Autowired
@@ -51,9 +54,10 @@ public class LoginRequestHandler implements ProtocolHandler {
             // 登陆时查询所有离线信息给客户端
             List<OfflineMessage> offlineMessages = messageService.listOfflineMessage(userId);
             Fim.LoginResponse.Builder builder = Fim.LoginResponse.newBuilder();
-            builder.setSuccess(true).getMessageIdList().addAll(offlineMessages.stream().map(o -> o.getMessageId()).collect(Collectors.toList()));
+            List<Long> messageIds = offlineMessages.stream().map(o -> o.getMessageId()).collect(Collectors.toList());
+            builder.setSuccess(true).addAllMessageId(messageIds);
             Fim.LoginResponse response = builder.build();
-            ctx.channel().writeAndFlush(response);
+            ctx.channel().writeAndFlush(ProtocolHelper.loginResponse(response));
             // 添加用户连接缓存
             channelHolderService.add(userId, ctx.channel());
         } else {
@@ -63,7 +67,7 @@ public class LoginRequestHandler implements ProtocolHandler {
                     .setErrorCode(Errors.INVALID_TOKEN.getErrorCode())
                     .setErrorMessage(Errors.INVALID_TOKEN.getErrorMessage())
                     .build();
-            ctx.channel().writeAndFlush(response);
+            ctx.channel().writeAndFlush(ProtocolHelper.loginResponse(response));
         }
     }
 }

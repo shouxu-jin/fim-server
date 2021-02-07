@@ -2,6 +2,7 @@ package com.yytxdy.fim.server.netty;
 
 import com.yytxdy.fim.protocol.Fim;
 import com.yytxdy.fim.server.service.protocolHandler.ProtocolHandler;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@ChannelHandler.Sharable
 public class ServerHandler extends ChannelInboundHandlerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(ServerHandler.class);
 

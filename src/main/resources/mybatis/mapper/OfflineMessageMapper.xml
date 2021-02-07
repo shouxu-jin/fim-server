@@ -8,6 +8,6 @@
         select * from t_offline_message where receiver_id = #{userId}
     </select>
     <delete id="deleteOfflineMessage">
-        delete from t_offline_message where receiver_id = #{receiverId} and message_id = #{messageId}
+        delete from t_offline_message where receiver_id = #{receiverId} and message_id <![CDATA[ <= ]]> #{messageId}
     </delete>
 </mapper>

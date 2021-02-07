@@ -41,7 +41,7 @@ sharding:
             table-strategy:
               inline:
                 sharding-column: receiver_id
-                algorithm-expression: t_message_$->{receiver_id%2 + 1}
+                algorithm-expression: t_offline_message_$->{receiver_id%2 + 1}
 
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml

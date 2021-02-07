@@ -1,4 +1,4 @@
-package com.yytxdy.fim.server.utils;
+package com.yytxdy.fim.server.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,9 +11,7 @@ public class SequenceGenerator {
     @Autowired
     private RedisTemplate<String, Serializable> redisTemplate;
 
-    public long nextId(long senderId, long receiverId) {
-        String key = senderId > receiverId ? receiverId + String.valueOf(senderId) : senderId + String.valueOf(receiverId);
-        Long messageId = redisTemplate.boundValueOps(key).increment();
-        return messageId;
+    public long nextId(long receiverId) {
+        return redisTemplate.boundValueOps(receiverId + "-id").increment();
     }
 }

@@ -1,6 +1,7 @@
 package com.yytxdy.fim.server.netty;
 
 import com.yytxdy.fim.server.service.ChannelHolderService;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@ChannelHandler.Sharable
 public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(HeartbeatHandler.class);
     @Autowired
